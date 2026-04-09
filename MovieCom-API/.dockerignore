@@ -1,0 +1,28 @@
+# System kontroli wersji
+.git
+.gitignore
+
+# Katalogi robocze i cache Gradle
+.gradle/
+build/
+out/
+target/
+bin/
+
+# Pliki środowisk IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+
+# Lokalne pliki środowiskowe (bezpieczeństwo!)
+.env
+*.env
+
+# Pliki systemowe
+.DS_Store
+Thumbs.db
