@@ -4,8 +4,6 @@ services:
   database:
     image: docker.io/bartkek/moviecom-db:latest
     container_name: moviecom-db
-    ports:
-      - "27017:27017"
     volumes:
       - mongo_data:/data/db
     networks:
