@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: moviecom-config
+  namespace: moviecom
+data:
+  # Konfiguracja URL na podstawie wewnętrznego DNS w Kubernetes
+  SPRING_DATA_MONGODB_URI: "mongodb://moviecom-db-0.moviecom-db-svc.moviecom.svc.cluster.local:27017/moviecom"

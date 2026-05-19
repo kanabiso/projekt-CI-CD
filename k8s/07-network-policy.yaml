@@ -1,0 +1,49 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api-network-policy
+  namespace: moviecom
+spec:
+  podSelector:
+    matchLabels:
+      app: moviecom-api
+  policyTypes:
+    - Ingress
+  ingress:
+    # Reguła 1: Zezwól na ruch z Frontendu 
+    - from:
+        - podSelector:
+            matchLabels:
+              app: moviecom-frontend
+      ports:
+        - protocol: TCP
+          port: 9000
+    # Reguła 2: Zezwól na ruch z Ingress Controllera 
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 9000
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-network-policy
+  namespace: moviecom
+spec:
+  podSelector:
+    matchLabels:
+      app: moviecom-db
+  policyTypes:
+    - Ingress
+  ingress:
+    # Reguła 1: Zezwól na ruch wyłącznie z API do bazy danych
+    - from:
+        - podSelector:
+            matchLabels:
+              app: moviecom-api
+      ports:
+        - protocol: TCP
+          port: 27017

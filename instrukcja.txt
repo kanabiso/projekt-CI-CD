@@ -1,0 +1,17 @@
+# Uruchomienie minikube
+minikube start
+
+# Dodanie pluginu ingress
+minikube addons enable ingress
+
+# Przygotowanie katalogu dla wolumenu
+minikube ssh "sudo mkdir -p /mnt/data/mongo"
+
+# Tworzymy namespace jako pierwszy
+kubectl apply -f k8s/00-namespace.yaml
+
+# Wrzucamy całą resztę z bieżącego folderu
+kubectl apply -f k8s/
+
+# Dodanie hosta do pliku systemowego
+echo "$(minikube ip) moviecom.local" | sudo tee -a /etc/hosts > /dev/null

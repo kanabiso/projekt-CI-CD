@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: moviecom-frontend-svc
+  namespace: moviecom
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: moviecom-frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moviecom-frontend
+  namespace: moviecom
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: moviecom-frontend
+  template:
+    metadata:
+      labels:
+        app: moviecom-frontend
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - moviecom-frontend
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: frontend
+          image: docker.io/bartkek/moviecom-client:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

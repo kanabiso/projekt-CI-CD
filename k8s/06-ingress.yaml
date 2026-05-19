@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: moviecom-ingress
+  namespace: moviecom
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # Jawne wymuszenie HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  # Sekcja TLS odpowiedzialna za HTTPS
+  tls:
+    - hosts:
+        - moviecom.local
+      secretName: moviecom-tls-secret
+  rules:
+    - host: moviecom.local
+      http:
+        paths:
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: moviecom-api-svc
+                port:
+                  number: 9000
+          - path: /()(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: moviecom-frontend-svc
+                port:
+                  number: 80
